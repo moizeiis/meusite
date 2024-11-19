@@ -1,0 +1,46 @@
+let carrinho = [];
+
+function adicionarAoCarrinho(botao) {
+    const produto = botao.parentElement;
+    const id = produto.getAttribute('data-id');
+    const nome = produto.getAttribute('data-nome');
+    const preco = parseFloat(produto.getAttribute('data-preco'));
+
+    const item = carrinho.find(item => item.id === id);
+    if (item) {
+        item.quantidade++;
+    } else {
+        carrinho.push({ id, nome, preco, quantidade: 1 });
+    }
+
+    atualizarCarrinho();
+}
+
+function atualizarCarrinho() {
+    const lista = document.getElementById('itens-carrinho');
+    const total = document.getElementById('total-carrinho');
+
+    lista.innerHTML = '';
+    let totalCarrinho = 0;
+
+    carrinho.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.nome} - R$ ${item.preco.toFixed(2)} x ${item.quantidade}`;
+        lista.appendChild(li);
+
+        totalCarrinho += item.preco * item.quantidade;
+    });
+
+    total.textContent = totalCarrinho.toFixed(2);
+}
+
+function finalizarCompra() {
+    if (carrinho.length === 0) {
+        alert('Seu carrinho está vazio!');
+        return;
+    }
+
+    alert('Compra finalizada com sucesso!');
+    carrinho = [];
+    atualizarCarrinho();
+}
